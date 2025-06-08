@@ -1,0 +1,82 @@
+.task-card {
+  cursor: move;
+}
+
+.task-time {
+  min-width: 30px;
+  display: inline-block;
+  text-align: right;
+}
+
+.remark-box {
+  transition: all 0.2s ease;
+}
+
+
+.task-card {
+  background-color: #f8f9fa;
+}
+
+.task-card input,
+.task-card select {
+  width: auto;
+  min-width: 100px;
+}
+
+.task-card .form-control.task-time {
+  width: 70px;
+}
+
+.notes {
+  margin-top: 10px;
+}
+
+.shift-column {
+  min-height: 200px;
+}
+  
+.shift-column {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.task-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 12px;
+  background-color: #fff;
+}
+
+.editable-task-name,
+.task-time {
+  display: inline-block;
+  min-width: 30px;
+}
+
+.remark-box {
+  margin-top: 6px;
+}
+
+.form-select,
+.editable-task-name,
+.task-time {
+  font-size: 0.85rem;
+}
+
+/* 項目ごとの幅（colで調整） */
+.task-name-col { flex: 1.5; }
+.select1-col   { flex: 2.5; }
+.select2-col   { flex: 2.5; }
+.time-col      { flex: 1.5; }
+.remark-btn-col{ flex: 1.8; } 
+
+.card.dragging {
+  opacity: 0.5;
+}
+
+.task-card.selected {
+  outline: 2px solid #007bff;
+  background-color: #eaf4ff;
+}
