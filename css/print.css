@@ -1,48 +1,77 @@
-/* 印刷時の設定強化 */
+/* ------------ 印刷専用スタイル ------------ */
 @media print {
-  /* 不要部分非表示 */
+  /* 不要なボタン類非表示 */
   .no-print,
-  .no-print * {
+  .no-print *,
+  .btn,
+  button,
+  a.btn {
     display: none !important;
   }
 
   body {
     margin: 0;
     padding: 0;
+    background: #fff;
+    color: #000;
   }
 
-  /* ナビバー固定 */
+  /* 固定ヘッダーのように表示 */
   nav,
   .navbar {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
-    background: #fff;
+    background: #fff !important;
     border-bottom: 1px solid #ccc;
     padding: 10px;
     z-index: 1000;
   }
 
-  /* コンテンツ全体に余白を調整 */
-  .container {
-    margin-top: 100px; /* nav固定の分を考慮 */
-    page-break-inside: avoid;
+  /* 食事時間のレイアウト調整 */
+  .meal-info .col-md-3 {
+    max-width: 25%;
+    flex: 0 0 25%;
   }
 
-  /* テーブルのヘッダーを印刷時も表示 */
+  .meal-info .form-control {
+    font-size: 12px;
+    padding: 2px 4px;
+    width: 48%;
+  }
+
+  .container {
+    margin-top: 100px; /* ナビバーの高さ分 */
+  }
+
+  /* 改ページ防止 */
+  .shift-column {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 40px;
+  }
+
   thead {
     display: table-header-group;
   }
 
-  .shift-column {
-    page-break-inside: avoid; /* 途中で改ページされないようにする */
-    break-inside: avoid;
-    margin-bottom: 40px;
+  /* 印刷時の配色維持（背景色） */
+  .shift-column.bg-primary-subtle {
+    background-color: #cfe2ff !important;
+  }
+  .shift-column.bg-danger-subtle {
+    background-color: #f8d7da !important;
+  }
+  .shift-column.bg-warning-subtle {
+    background-color: #fff3cd !important;
   }
 
+  /* テーブル設定 */
   .shift-table {
     width: 100%;
     table-layout: fixed;
+    border-collapse: collapse;
   }
 
   .shift-table th,
@@ -55,50 +84,42 @@
     text-align: center;
   }
 
-  .shift-table td:last-child,
-  .shift-table th:last-child {
-    white-space: normal;
-    width: 40%; /* 備考欄広め */
-    text-align: left;
-  }
-
-  .shift-column.bg-primary-subtle {
-    background-color: #cfe2ff !important;
-  }
-
-  .shift-column.bg-danger-subtle {
-    background-color: #f8d7da !important;
-  }
-
-  .shift-column.bg-warning-subtle {
-    background-color: #fff3cd !important;
-  }
-
-  /* 各列幅指定 */
+  /* 列幅指定 */
   .shift-table th:nth-child(1),
   .shift-table td:nth-child(1) {
-    width: 10%;
+    width: 8%; /* 作業開始時間を狭める */
   }
+
   .shift-table th:nth-child(2),
   .shift-table td:nth-child(2) {
-    width: 15%;
+    width: 14%;
   }
+
   .shift-table th:nth-child(3),
   .shift-table td:nth-child(3) {
     width: 10%;
   }
+
   .shift-table th:nth-child(4),
   .shift-table td:nth-child(4) {
-    width: 15%;
+    width: 14%;
   }
+
   .shift-table th:nth-child(5),
   .shift-table td:nth-child(5) {
     width: 10%;
   }
+
+  /* 備考欄は残りをすべて使用し折り返しOK */
+  .shift-table th:nth-child(6),
+  .shift-table td:nth-child(6) {
+    width: auto;
+    white-space: normal;
+    text-align: left;
+  }
 }
 
-
-/* ------- 共通の全体スタイル ------- */
+/* ------------ 共通スタイル ------------ */
 body {
   font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
   font-size: 12px;
@@ -113,7 +134,6 @@ body {
   margin: auto;
 }
 
-/* テーブル共通 */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -125,61 +145,14 @@ body {
   border: 1px solid #dee2e6;
   padding: 4px 6px;
   font-size: 12px;
-  white-space: nowrap;  /* ✔ 折り返し禁止 */
+  white-space: nowrap;
   vertical-align: middle;
   text-align: center;
 }
 
-/* 備考欄だけは折り返しOK・幅広め */
+/* 備考欄だけは折り返しOK */
 .table th:last-child,
 .table td:last-child {
-  white-space: normal; /* ✔ 備考欄のみ折り返し許可 */
+  white-space: normal;
   text-align: left;
-  width: 42%;
-}
-
-/* 各列の幅を調整（折り返し防止） */
-.table th:nth-child(1),
-.table td:nth-child(1) {
-  width: 10%; /* 作業開始 */
-}
-
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  width: 15%; /* 作業名 */
-}
-
-.table th:nth-child(3),
-.table td:nth-child(3) {
-  width: 10%; /* 喫食 */
-}
-
-.table th:nth-child(4),
-.table td:nth-child(4) {
-  width: 15%; /* 区分 */
-}
-
-/* シフト見出し（ページ内での改ページを防止） */
-.shift-column {
-  page-break-inside: avoid;
-  margin-bottom: 40px;
-}
-
-/* 印刷画面のテーブルスタイル */
-.shift-table th,
-.shift-table td {
-  vertical-align: middle;
-  font-size: 0.875rem;
-  padding: 4px 8px;
-}
-
-/* 作業開始時間用の input 幅指定（未使用なら削除してもよい） */
-.shift-table .input-start {
-  width: 80px;
-}
-
-/* 備考欄の入力エリア */
-.shift-table .remark-input {
-  width: 100%;
-  min-width: 300px;
 }
