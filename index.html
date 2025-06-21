@@ -11,24 +11,20 @@
   <nav class="navbar bg-light py-3 mb-4">
     <div class="container d-flex justify-content-between align-items-center">
       <div class="col-md-4">
-        <label for="name" class="form-label mb-1">施設名</label>
+        <label for="facility-name" class="form-label mb-1">施設名</label>
         <input type="text" id="facility-name" class="form-control" placeholder="例: 〇〇介護施設" />
       </div>
       <div class="mt-4 text-end">
-        <!-- 上段：保存ボタン -->
         <div class="mb-2">
           <button id="saveBtn" class="btn btn-secondary">保存</button>
           <a href="print.html" class="btn btn-primary ms-2">印刷画面へ</a>
         </div>
-      
-        <!-- 下段：JSON保存・読込 -->
         <div class="text-end mb-4">
           <button id="export-json" class="btn btn-outline-secondary btn-sm">名前をつけて保存</button>
           <label for="import-json" class="btn btn-outline-primary btn-sm ms-2 mb-0">読込</label>
           <input type="file" id="import-json" accept=".json" style="display:none;" />
         </div>
       </div>
-      
     </div>
   </nav>
 
@@ -65,14 +61,12 @@
       </div>
     </div>
   </div>
-  
 
   <!-- シフト列 -->
   <div class="container mt-4">
     <div class="row">
-      <!-- 朝 -->
       <div class="col-md-4" id="morning">
-        <div class="shift-column  bg-light p-3 rounded border bg-primary-subtle" data-shift="morning">
+        <div class="shift-column bg-primary-subtle p-3 rounded border" data-shift="morning">
           <div class="d-flex align-items-center mb-3">
             <h5 class="mb-0">🌅 朝シフト</h5>
             <button class="btn btn-sm btn-outline-primary ms-2 add-task" data-shift="morning">＋追加</button>
@@ -82,9 +76,8 @@
         </div>
       </div>
 
-      <!-- 昼 -->
       <div class="col-md-4" id="lunch">
-        <div class="shift-column bg-light p-3 rounded border bg-danger-subtle" data-shift="lunch">
+        <div class="shift-column bg-danger-subtle p-3 rounded border" data-shift="lunch">
           <div class="d-flex align-items-center mb-3">
             <h5 class="mb-0">☀️ 昼シフト</h5>
             <button class="btn btn-sm btn-outline-primary ms-2 add-task" data-shift="lunch">＋追加</button>
@@ -94,9 +87,8 @@
         </div>
       </div>
 
-      <!-- 夕 -->
       <div class="col-md-4" id="dinner">
-        <div class="shift-column bg-light p-3 rounded border bg-warning-subtle" data-shift="dinner">
+        <div class="shift-column bg-warning-subtle p-3 rounded border" data-shift="dinner">
           <div class="d-flex align-items-center mb-3">
             <h5 class="mb-0">🌆 夕シフト</h5>
             <button class="btn btn-sm btn-outline-primary ms-2 add-task" data-shift="dinner">＋追加</button>
@@ -108,60 +100,71 @@
     </div>
   </div>
 
-  <!-- 作業カードテンプレート -->
-  <template id="task-card-template">
-    <div class="card mb-2 shadow-sm task-card" draggable="true">
-      <div class="card-body px-2 py-1">
-        <div class="d-flex align-items-center flex-nowrap gap-2">
-          <!-- 作業名 -->
-          <div class="flex-grow-1 min-width-0">
-            <span contenteditable="true" class="editable-task-name fw-bold text-primary">作業</span>
-          </div>
+<!-- 作業カードテンプレート -->
+<template id="task-card-template">
+  <div class="card mb-2 shadow-sm task-card" draggable="true">
+    <div class="card-body px-2 py-1">
 
-          <!-- 喫食 select -->
-          <div class="flex-shrink-0">
-            <select class="form-select form-select-sm meal-select" style="min-width: 80px;">
-              <option selected>喫食</option>
-              <option value="morning">朝食</option>
-              <option value="lunch">昼食</option>
-              <option value="dinner">夕食</option>
-              <option value="snack">おやつ</option>
-              <option value="n-morning">翌朝</option>
-            </select>
-          </div>
-
-          <!-- 区分 select -->
-          <div class="flex-shrink-0">
-            <select class="form-select form-select-sm category-select" style="min-width: 100px;">
-              <option selected>区分</option>
-              <option value="main">主菜</option>
-              <option value="hot">温菜</option>
-              <option value="cold">冷菜</option>
-              <option value="snack">おやつ</option>
-              <option value="m-h">主菜／温菜</option>
-              <option value="m-c">主菜／冷菜</option>
-              <option value="h-c">温菜／冷菜</option>
-            </select>
-          </div>
-
-          <!-- 時間 -->
-          <div class="text-nowrap flex-shrink-0">
-            <span contenteditable="true" class="task-time">20</span> 分
-          </div>
-
-          <!-- 備考ボタン -->
-          <div class="flex-shrink-0">
-            <button class="btn btn-outline-info btn-sm toggle-remark">備考</button>
-          </div>
-        </div>
-
-        <!-- 備考エリア -->
-        <div class="remark-box d-none mt-2">
-          <textarea class="form-control remark-textarea" rows="2" placeholder="備考を入力してください"></textarea>
+      <!-- 🔵 1行目：作業名 -->
+      <div class="d-flex align-items-center mb-1">
+        <div class="flex-grow-1 min-width-0 task-name-wrapper">
+          <input type="text" class="form-control fw-bold text-primary editable-task-name" placeholder="作業名">
         </div>
       </div>
+
+
+      <!-- 🔵 2行目：select類・時間・備考ボタン -->
+      <div class="d-flex align-items-center flex-nowrap gap-2">
+
+        <!-- 喫食 select -->
+        <div class="flex-shrink-0">
+          <select class="form-select form-select-sm meal-select" style="min-width: 80px;">
+            <option selected>喫食</option>
+            <option value="nothing">-</option>
+            <option value="morning">朝食</option>
+            <option value="lunch">昼食</option>
+            <option value="dinner">夕食</option>
+            <option value="snack">おやつ</option>
+            <option value="n-morning">翌朝</option>
+          </select>
+        </div>
+
+        <!-- 区分 select -->
+        <div class="flex-shrink-0">
+          <select class="form-select form-select-sm category-select" style="min-width: 100px;">
+            <option selected>区分</option>
+            <option value="nothing">-</option>
+            <option value="main">主菜</option>
+            <option value="hot">温菜</option>
+            <option value="cold">冷菜</option>
+            <option value="snack">おやつ</option>
+            <option value="m-h">主菜／温菜</option>
+            <option value="m-c">主菜／冷菜</option>
+            <option value="h-c">温菜／冷菜</option>
+          </select>
+        </div>
+
+        <!-- 時間 -->
+        <div class="text-nowrap flex-shrink-0">
+          <span contenteditable="true" class="task-time">20</span> 分
+        </div>
+
+        <!-- 備考ボタン -->
+        <div class="flex-shrink-0">
+          <button class="btn btn-outline-info btn-sm toggle-remark">備考</button>
+        </div>
+      </div>
+
+      <!-- 備考エリア -->
+      <div class="remark-box d-none mt-2">
+        <textarea class="form-control remark-textarea" rows="2" placeholder="備考を入力してください"></textarea>
+      </div>
+
     </div>
-  </template>
+  </div>
+</template>
+
+
 
   <script src="js/index.js"></script>
 </body>

@@ -1,20 +1,16 @@
 .task-card {
   cursor: move;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 12px;
 }
 
 .task-time {
   min-width: 30px;
   display: inline-block;
   text-align: right;
-}
-
-.remark-box {
-  transition: all 0.2s ease;
-}
-
-
-.task-card {
-  background-color: #f8f9fa;
 }
 
 .task-card input,
@@ -27,26 +23,21 @@
   width: 70px;
 }
 
+.task-name-wrapper {
+  max-width: 200px; /* 必要に応じて調整可能 */
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
 .notes {
   margin-top: 10px;
 }
 
 .shift-column {
   min-height: 200px;
-}
-  
-.shift-column {
   background-color: #f8f9fa;
   padding: 10px;
   border-radius: 8px;
-}
-
-.task-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 12px;
-  background-color: #fff;
 }
 
 .editable-task-name,
@@ -57,6 +48,7 @@
 
 .remark-box {
   margin-top: 6px;
+  transition: all 0.2s ease;
 }
 
 .form-select,
@@ -79,4 +71,44 @@
 .task-card.selected {
   outline: 2px solid #007bff;
   background-color: #eaf4ff;
+}
+
+/* カード内レイアウトを横並びに固定 */
+.task-card .d-flex {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+/* 13.3インチ（1280px）以下の画面で縮小表示（折り返さずに調整） */
+@media (max-width: 1280px) {
+  .task-card .editable-task-name,
+  .task-card select,
+  .task-card .task-time,
+  .task-card .toggle-remark {
+    font-size: 0.75rem;
+  }
+
+  .task-card select {
+    min-width: 50px;
+    padding: 2px;
+  }
+
+  .task-card .task-time {
+    min-width: 30px;
+  }
+
+  .task-card .toggle-remark {
+    padding: 2px 4px;
+    font-size: 0.7rem;
+  }
+
+  .task-card .card-body {
+    padding: 0.5rem;
+    overflow-x: auto; /* はみ出し防止の保険として横スクロール許可 */
+  }
+
+  .task-card .d-flex {
+    gap: 4px;
+    flex-wrap: nowrap; /* 折り返さず横並び維持 */
+  }
 }

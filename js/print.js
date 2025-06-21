@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ラベル変換マップ
   const mealLabels = {
+    nothing: "-",
     morning: "朝食",
     lunch: "昼食",
     dinner: "夕食",
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const categoryLabels = {
+    nothing: "-",
     main: "主菜",
     hot: "温菜",
     cold: "冷菜",
