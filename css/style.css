@@ -1,71 +1,115 @@
+/* === 全体リセット＆ベース === */
+body {
+  background-color: #f4f7fb;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* === 作業カード === */
 .task-card {
   cursor: move;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 12px;
+  background: linear-gradient(to right, #ffffff, #f1f8ff);
+  border-left: 5px solid #4facfe;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.task-time {
-  min-width: 30px;
-  display: inline-block;
-  text-align: right;
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.task-card input,
+.task-card .card-body {
+  padding: 1rem;
+}
+
+/* === 作業名（1行目） === */
+.task-name-wrapper input.editable-task-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #007bff;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background-color: transparent;
+  width: 100%;
+  transition: border-bottom 0.2s;
+}
+
+.task-name-wrapper input.editable-task-name:focus {
+  outline: none;
+  border-bottom: 2px solid #007bff;
+}
+
+/* === 2行目：select、時間、備考 === */
 .task-card select {
-  width: auto;
-  min-width: 100px;
+  font-size: 0.85rem;
+  min-width: 90px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  background-color: #fff;
+  transition: border-color 0.2s;
 }
 
-.task-card .form-control.task-time {
-  width: 70px;
+.task-card select:focus {
+  border-color: #4facfe;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(79, 172, 254, 0.25);
 }
 
-.task-name-wrapper {
-  max-width: 200px; /* 必要に応じて調整可能 */
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-.notes {
-  margin-top: 10px;
-}
-
-.shift-column {
-  min-height: 200px;
-  background-color: #f8f9fa;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.editable-task-name,
-.task-time {
-  display: inline-block;
-  min-width: 30px;
-}
-
-.remark-box {
-  margin-top: 6px;
-  transition: all 0.2s ease;
-}
-
-.form-select,
-.editable-task-name,
 .task-time {
   font-size: 0.85rem;
+  font-weight: 500;
+  color: #444;
+  min-width: 30px;
+  display: inline-block;
 }
 
-/* 項目ごとの幅（colで調整） */
-.task-name-col { flex: 1.5; }
-.select1-col   { flex: 2.5; }
-.select2-col   { flex: 2.5; }
-.time-col      { flex: 1.5; }
-.remark-btn-col{ flex: 1.8; } 
+.toggle-remark {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
 
+.toggle-remark:hover {
+  background-color: #d0ecff;
+}
+
+/* === 備考エリア === */
+.remark-box {
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.remark-textarea {
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* === シフト列 === */
+.shift-column {
+  min-height: 250px;
+  background-color: #eaf4ff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #c2dfff;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* === 合計時間表示 === */
+.total-time {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+}
+
+/* === 選択時／ドラッグ中 === */
 .card.dragging {
-  opacity: 0.5;
+  opacity: 0.4;
+  transform: scale(0.98);
 }
 
 .task-card.selected {
@@ -73,13 +117,7 @@
   background-color: #eaf4ff;
 }
 
-/* カード内レイアウトを横並びに固定 */
-.task-card .d-flex {
-  flex-wrap: nowrap;
-  gap: 8px;
-}
-
-/* 13.3インチ（1280px）以下の画面で縮小表示（折り返さずに調整） */
+/* === モバイル対応 === */
 @media (max-width: 1280px) {
   .task-card .editable-task-name,
   .task-card select,
@@ -89,26 +127,21 @@
   }
 
   .task-card select {
-    min-width: 50px;
+    min-width: 60px;
     padding: 2px;
   }
 
-  .task-card .task-time {
-    min-width: 30px;
-  }
-
   .task-card .toggle-remark {
-    padding: 2px 4px;
     font-size: 0.7rem;
+    padding: 3px 6px;
   }
 
   .task-card .card-body {
     padding: 0.5rem;
-    overflow-x: auto; /* はみ出し防止の保険として横スクロール許可 */
   }
 
   .task-card .d-flex {
     gap: 4px;
-    flex-wrap: nowrap; /* 折り返さず横並び維持 */
+    flex-wrap: nowrap;
   }
 }
