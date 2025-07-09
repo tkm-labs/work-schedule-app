@@ -178,39 +178,37 @@ function collectCurrentData() {
 
 // 🔸 DOM読み込み後の統合処理
 document.addEventListener("DOMContentLoaded", () => {
-  // 「保存」ボタン（shiftWorkData）
-  const saveButton = document.getElementById("saveBtn");
-  if (saveButton) {
-    saveButton.addEventListener("click", () => {
-      const data = collectCurrentData();
-      localStorage.setItem("shiftWorkData", JSON.stringify(data));
-      alert("保存しました！");
-    });
-  }
+// 「保存」ボタン（shiftWorkData）
+const saveButton = document.getElementById("saveBtn");
+if (saveButton) {
+  saveButton.addEventListener("click", () => {
+    const data = collectCurrentData();
+    localStorage.setItem("shiftWorkData", JSON.stringify(data));
 
-  // 「名前をつけて保存」ボタン（shiftPlansへ追加）
-  const exportBtn = document.getElementById("export-json");
-  if (exportBtn) {
-    exportBtn.addEventListener("click", () => {
-      const name = prompt("保存名を入力してください（例：〇〇施設｜6月15日）");
-      if (!name) return;
+    // shiftPlans にも保存・上書きする処理
+    const existing = JSON.parse(localStorage.getItem("shiftPlans") || "[]");
+    const id = new URLSearchParams(location.search).get("id") || Date.now().toString();
+    const name = document.getElementById("facility-name").value || "名称未設定";
 
-      const currentData = collectCurrentData();
-      const id = Date.now().toString();
+    const newEntry = {
+      id,
+      name,
+      ...data
+    };
 
-      const newEntry = {
-        id,
-        name,
-        ...currentData
-      };
-
-      const existing = JSON.parse(localStorage.getItem("shiftPlans") || "[]");
+    const index = existing.findIndex(p => p.id === id);
+    if (index !== -1) {
+      existing[index] = newEntry;
+    } else {
+      
       existing.push(newEntry);
-      localStorage.setItem("shiftPlans", JSON.stringify(existing));
+    }
 
-      alert("名前をつけて保存しました！");
-    });
-  }
+    localStorage.setItem("shiftPlans", JSON.stringify(existing));
+
+    alert("保存しました！（一覧にも反映されました）");
+  });
+}
 
   // URLから?id=○○ を取得して工程表を復元
   const id = new URLSearchParams(location.search).get("id");
