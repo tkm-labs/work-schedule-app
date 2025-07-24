@@ -1,14 +1,5 @@
 /* ------------ 印刷専用スタイル ------------ */
 @media print {
-  /* 不要なボタン類非表示 */
-  .no-print,
-  .no-print *,
-  .btn,
-  button,
-  a.btn {
-    display: none !important;
-  }
-
   body {
     margin: 0;
     padding: 0;
@@ -19,12 +10,11 @@
   /* 固定ヘッダーのように表示 */
   nav,
   .navbar {
-    position: fixed;
+    position: static;
     top: 0;
     left: 0;
     width: 100%;
     background: #fff !important;
-    border-bottom: 1px solid #ccc;
     padding: 10px;
     z-index: 1000;
   }
@@ -151,8 +141,8 @@ body {
 }
 
 /* 備考欄だけは折り返しOK */
-.table th:last-child,
-.table td:last-child {
-  white-space: normal;
-  text-align: left;
+textarea.remark-input {
+  resize: none;
+  white-space: pre-wrap;
+  word-break: break-word;
 }

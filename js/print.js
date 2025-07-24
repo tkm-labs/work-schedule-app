@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // 備考（編集可能）
       const tdRemark = document.createElement("td");
-      const inputRemark = document.createElement("input");
+      const inputRemark = document.createElement("textarea");
       inputRemark.type = "text";
       inputRemark.className = "form-control remark-input";
       inputRemark.value = task.remark || "";

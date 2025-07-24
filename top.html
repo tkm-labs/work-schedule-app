@@ -64,14 +64,10 @@
           <div class="card h-100 shadow-sm">
             <div class="card-body">
               <h5 class="card-title">${plan.name}</h5>
-              <p class="card-text">
-                作業数：${countTotalTasks(plan)}｜
-                作業者数：${estimateWorkerCount(plan)}名
-              </p>
-              <a href="index.html?id=${plan.id}" class="btn btn-outline-primary btn-sm me-1">編集</a>
-              <a href="print.html?id=${plan.id}" class="btn btn-outline-secondary btn-sm me-1">印刷</a>
-              <button class="btn btn-outline-danger btn-sm me-1 delete-btn" data-id="${plan.id}">削除</button>
-              <button class="btn btn-outline-success btn-sm duplicate-btn" data-id="${plan.id}">複製</button>
+                <a href="index.html?id=${plan.id}" class="btn btn-outline-primary btn-sm me-1">編集</a>
+                <a href="print.html?id=${plan.id}" class="btn btn-outline-secondary btn-sm me-1">印刷</a>
+                <button class="btn btn-outline-danger btn-sm me-1 delete-btn" data-id="${plan.id}">削除</button>
+                <button class="btn btn-outline-success btn-sm duplicate-btn" data-id="${plan.id}">複製</button>
             </div>
           </div>
         `;
@@ -105,10 +101,6 @@
           }
         }
       });
-
-      function countTotalTasks(plan) {
-        return [...(plan.shifts?.morning || []), ...(plan.shifts?.lunch || []), ...(plan.shifts?.dinner || [])].length;
-      }
 
       function estimateWorkerCount(plan) {
         return Math.max(1, Math.round(countTotalTasks(plan) / 3));
