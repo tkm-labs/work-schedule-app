@@ -29,15 +29,17 @@ function createTaskCard(task) {
 }
 
 // 🔸 タスク追加ボタン
-document.querySelectorAll('.add-task').forEach(button => {
-  button.addEventListener('click', () => {
-    const shiftColumn = button.closest('.shift-column');
-    const container = shiftColumn.querySelector('.task-container');
-    const newCard = createTaskCard({});
-    container.appendChild(newCard);
-    setTimeout(() => updateTotalTime(shiftColumn), 0);
+function setupAddTaskButtons() {
+  document.querySelectorAll('.add-task').forEach(button => {
+    button.addEventListener('click', () => {
+      const shiftColumn = button.closest('.shift-column');
+      const container = shiftColumn.querySelector('.task-container');
+      const newCard = createTaskCard({});
+      container.appendChild(newCard);
+      setTimeout(() => updateTotalTime(shiftColumn), 0);
+    });
   });
-});
+}
 
 // 🔸 作業時間編集時に合計更新
 ['input', 'blur'].forEach(eventName => {
@@ -49,7 +51,7 @@ document.querySelectorAll('.add-task').forEach(button => {
   }, true);
 });
 
-// 🔸 カード選択＆削除（ダブルクリック＆Delete）
+// 🔸 カード選択＆削除
 let selectedCard = null;
 document.addEventListener('dblclick', (e) => {
   const card = e.target.closest('.task-card');
@@ -61,6 +63,7 @@ document.addEventListener('dblclick', (e) => {
     selectedCard = null;
   }
 });
+
 document.addEventListener('keydown', (e) => {
   if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCard) {
     const shiftColumn = selectedCard.closest('.shift-column');
@@ -70,7 +73,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// 🔸 ドラッグ＆ドロップ処理
+// 🔸 ドラッグ＆ドロップ
 function getDragAfterElement(container, y) {
   const draggableElements = [...container.querySelectorAll(".task-card:not(.dragging)")];
   return draggableElements.reduce((closest, child) => {
@@ -85,6 +88,7 @@ document.addEventListener("dragstart", (e) => {
     e.target.classList.add("dragging");
   }
 });
+
 document.addEventListener("dragend", (e) => {
   if (e.target.classList.contains("task-card")) {
     e.target.classList.remove("dragging");
@@ -92,6 +96,7 @@ document.addEventListener("dragend", (e) => {
     if (shiftColumn) updateTotalTime(shiftColumn);
   }
 });
+
 document.querySelectorAll(".task-container").forEach(container => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
@@ -105,15 +110,14 @@ document.querySelectorAll(".task-container").forEach(container => {
   });
 });
 
-// 🔸 備考ボタン切り替え
+// 🔸 備考切り替え
 ['click', 'input'].forEach(eventName => {
   document.addEventListener(eventName, (e) => {
     const card = e.target.closest(".task-card");
     if (!card) return;
 
     if (eventName === "click" && e.target.classList.contains("toggle-remark")) {
-      const remarkBox = card.querySelector(".remark-box");
-      remarkBox.classList.toggle("d-none");
+      card.querySelector(".remark-box").classList.toggle("d-none");
     }
 
     if (eventName === "input" && e.target.classList.contains("remark-textarea")) {
@@ -132,8 +136,7 @@ document.querySelectorAll(".task-container").forEach(container => {
 // 🔸 shift内の作業データ取得
 function getShiftTasks(shift) {
   const column = document.querySelector(`.shift-column[data-shift="${shift}"]`);
-  if (!column) return [];
-  const container = column.querySelector(".task-container");
+  const container = column?.querySelector(".task-container");
   if (!container) return [];
 
   return [...container.querySelectorAll(".task-card")].map(card => ({
@@ -178,49 +181,61 @@ function collectCurrentData() {
 
 // 🔸 DOM読み込み後の統合処理
 document.addEventListener("DOMContentLoaded", () => {
-// 「保存」ボタン（shiftWorkData）
-const saveButton = document.getElementById("saveBtn");
-if (saveButton) {
-  saveButton.addEventListener("click", () => {
-    const data = collectCurrentData();
-    localStorage.setItem("shiftWorkData", JSON.stringify(data));
+  setupAddTaskButtons();
 
-    // shiftPlans にも保存・上書きする処理
-    const existing = JSON.parse(localStorage.getItem("shiftPlans") || "[]");
-    const id = new URLSearchParams(location.search).get("id") || Date.now().toString();
-    const name = document.getElementById("facility-name").value || "名称未設定";
+  // 保存ボタン
+  const saveButton = document.getElementById("saveBtn");
+  if (saveButton) {
+    saveButton.addEventListener("click", () => {
+      const data = collectCurrentData();
+      localStorage.setItem("shiftWorkData", JSON.stringify(data));
 
-    const newEntry = {
-      id,
-      name,
-      ...data
-    };
+      const existing = JSON.parse(localStorage.getItem("shiftPlans") || "[]");
+      const id = new URLSearchParams(location.search).get("id") || Date.now().toString();
+      const name = data.facilityName || "名称未設定";
 
-    const index = existing.findIndex(p => p.id === id);
-    if (index !== -1) {
-      existing[index] = newEntry;
-    } else {
-      
-      existing.push(newEntry);
-    }
+      const newEntry = { id, name, ...data };
+      const index = existing.findIndex(p => p.id === id);
+      if (index !== -1) {
+        existing[index] = newEntry;
+      } else {
+        existing.push(newEntry);
+      }
 
-    localStorage.setItem("shiftPlans", JSON.stringify(existing));
+      localStorage.setItem("shiftPlans", JSON.stringify(existing));
+      alert("保存しました！（一覧にも反映されました）");
+    });
+  }
 
-    alert("保存しました！（一覧にも反映されました）");
-  });
-}
+  // 名前をつけて保存ボタン
+  const exportButton = document.getElementById("export-json");
+  if (exportButton) {
+    exportButton.addEventListener("click", () => {
+      const data = collectCurrentData();
+      const name = data.facilityName || "工程表";
 
-  // URLから?id=○○ を取得して工程表を復元
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${name}.json`;
+      a.click();
+
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  // 工程表を復元（URLのidから）
   const id = new URLSearchParams(location.search).get("id");
   if (id) {
     const plans = JSON.parse(localStorage.getItem("shiftPlans") || "[]");
     const plan = plans.find(p => p.id === id);
     if (!plan) {
-      alert("指定された工程表が見つかりません。");
+      alert("指定された工程表が見つかりません。トップページに戻って再読み込みしてください。")
       return;
     }
 
-    // 入力欄に反映
     document.getElementById("facility-name").value = plan.facilityName || "";
     document.getElementById("breakfast-time").value = plan.meals?.breakfast?.time || "";
     document.getElementById("breakfast-qty").value = plan.meals?.breakfast?.qty || "";
@@ -231,7 +246,6 @@ if (saveButton) {
     document.getElementById("dinner-time").value = plan.meals?.dinner?.time || "";
     document.getElementById("dinner-qty").value = plan.meals?.dinner?.qty || "";
 
-    // 作業カード表示
     function loadTasksToShift(shiftKey, tasks) {
       const column = document.querySelector(`.shift-column[data-shift="${shiftKey}"]`);
       const container = column?.querySelector(".task-container");
